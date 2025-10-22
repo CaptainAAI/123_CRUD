@@ -65,6 +65,29 @@ app.post('/api/mahasiswa', (req, res) => {
   });
 });
 
+app.put('/api/mahasiswa/:id', (req, res) => {
+  const { id } = req.params;
+  const { nama, alamat, agama, nim, kelas } = req.body;
+
+  // Validasi kolom wajib
+  if (!nama || !alamat || !agama) {
+    return res.status(400).json({
+      error: '❗ Kolom nama, alamat, dan agama wajib diisi!'
+    });
+  }
+
+  const query = 'UPDATE biodata SET nama = ?, alamat = ?, agama = ?, nim = ?, kelas = ? WHERE id = ?';
+  db.query(query, [nama, alamat, agama, nim || null, kelas || null, id], (err, result) => {
+    if (err) {
+      console.error('❌ Error query PUT:', err.stack);
+      return res.status(500).json({ error: 'Gagal memperbarui data' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Data tidak ditemukan' });
+    }
+    res.json({ message: '✅ Data berhasil diperbarui' });
+  });
+});
 
 
 
