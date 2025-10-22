@@ -21,3 +21,25 @@ const db = mysql.createConnection({
   password: '',
   database: 'mahasiswa'
 });
+
+db.connect((err) => {
+  if (err) {
+    console.log('❌ Error MySQL: ' + err.stack);
+    return;
+  }
+  console.log('✅ Koneksi MySQL berhasil');
+});
+
+app.get('/api/mahasiswa', (req, res) => {
+  const query = 'SELECT * FROM biodata';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('❌ Error query GET:', err.stack);
+      res.status(500).json({ error: 'Gagal mengambil data' });
+      return;
+    }
+    res.json(results);
+  });
+});
+
+
