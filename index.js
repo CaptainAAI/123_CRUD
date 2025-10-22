@@ -42,4 +42,17 @@ app.get('/api/mahasiswa', (req, res) => {
   });
 });
 
+app.post('/api/mahasiswa', (req, res) => {
+  const { nama, nim, jurusan, alamat } = req.body;
+  const query = 'INSERT INTO biodata (nama, alamat, agama, nim, kelas) VALUES (?, ?, ?, ?, ?)';
+  db.query(query, [nama, nim, jurusan, alamat], (err, result) => {
+    if (err) {
+      console.error('❌ Error query POST:', err.stack);
+      res.status(500).json({ error: 'Gagal menambah data' });
+      return;
+    }
+    res.status(201).json({ message: 'Data berhasil ditambahkan', id: result.insertId });
+  });
+});
+
 
