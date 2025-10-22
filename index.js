@@ -43,16 +43,28 @@ app.get('/api/mahasiswa', (req, res) => {
 });
 
 app.post('/api/mahasiswa', (req, res) => {
-  const { nama, nim, jurusan, alamat } = req.body;
+  const { nama, alamat, agama, nim, kelas } = req.body;
+
+  // 🔍 Validasi input wajib
+  if (!nama || !alamat || !agama) {
+    return res.status(400).json({
+      error: '❗ Kolom nama, alamat, dan agama wajib diisi!'
+    });
+  }
+
   const query = 'INSERT INTO biodata (nama, alamat, agama, nim, kelas) VALUES (?, ?, ?, ?, ?)';
-  db.query(query, [nama, nim, jurusan, alamat], (err, result) => {
+  db.query(query, [nama, alamat, agama, nim || null, kelas || null], (err, result) => {
     if (err) {
       console.error('❌ Error query POST:', err.stack);
-      res.status(500).json({ error: 'Gagal menambah data' });
-      return;
+      return res.status(500).json({ error: 'Gagal menambah data' });
     }
-    res.status(201).json({ message: 'Data berhasil ditambahkan', id: result.insertId });
+    res.status(201).json({ 
+      message: '✅ Data berhasil ditambahkan', 
+      id: result.insertId 
+    });
   });
 });
+
+
 
 
