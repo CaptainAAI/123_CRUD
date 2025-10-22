@@ -90,4 +90,20 @@ app.put('/api/mahasiswa/:id', (req, res) => {
 });
 
 
+app.delete('/api/mahasiswa/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM biodata WHERE id = ?';
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('❌ Error query DELETE:', err.stack);
+      return res.status(500).json({ error: 'Gagal menghapus data' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Data tidak ditemukan' });
+    }
+    res.json({ message: '🗑️ Data berhasil dihapus' });
+  });
+});
+
+
 
